@@ -49,7 +49,8 @@ def lift(data, addr, arch, max_bytes=None, max_inst=None, bytes_offset=0, opt_le
     if max_bytes is not None and max_bytes <= 0:
         raise PyVEXError("Cannot lift block with no data (max_bytes <= 0)")
 
-    if data is None or len(data) == 0:
+    # we support bytes, bytearray, memoryview, CData, and claripy.BVV
+    if data is None or (not isinstance(data, ffi.CData) and len(data) == 0):
         raise PyVEXError("Cannot lift block with no data (data is empty)")
 
     if isinstance(data, str):
